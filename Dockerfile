@@ -27,7 +27,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # User Environment Variables
-ENV PSM_REFRESH_RATE_SECONDS 90
+ENV PSM_REFRESH_RATE_SECONDS 60
 ENV PSM_AUTO_CONFIGURE true
 ENV PSM_PHP_DEBUG false
 ENV MYSQL_HOST database
@@ -37,7 +37,7 @@ ENV MYSQL_DATABASE phpservermonitor
 ENV MYSQL_DATABASE_PREFIX psm_
 
 # Time Zone
-ENV PHP_TIME_ZONE 'Europe/Amsterdam'
+ENV PHP_TIME_ZONE 'Africa/Bamako'
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 RUN sed -i 's/;date.timezone =/date.timezone = "${PHP_TIME_ZONE}"/g' "$PHP_INI_DIR/php.ini"
 # RUN php -i | grep -i error
@@ -58,6 +58,7 @@ RUN set -ex; \
   rm -rf ${APACHE_DOCUMENT_ROOT}/*; \
   curl --output phpservermonitor.tar.gz --location $URL; \
   tar -xvf phpservermonitor.tar.gz --strip-components=1 -C ${APACHE_DOCUMENT_ROOT}/; \ 
+  rm -rf /tmp/phpservermonitor.tar.gz; \
   cd ${APACHE_DOCUMENT_ROOT}
 #   chown -R ${APACHE_RUN_USER}:www-data /var/www
 #   find /var/www -type d -exec chmod 750 {} \; ; \
